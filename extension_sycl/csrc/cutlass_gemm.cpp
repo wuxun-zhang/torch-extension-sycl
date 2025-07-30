@@ -77,7 +77,7 @@ TORCH_LIBRARY(extension_sycl, m) {
 }
 
 TORCH_LIBRARY_IMPL(extension_sycl, XPU, m) {
-    m.impl("cutlass_gemm", &custom_xpu_extension::cutlass_gemm);
+    m.impl("cutlass_gemm", &extension_sycl::cutlass_gemm);
 }
 
 } // namespace extension_sycl
