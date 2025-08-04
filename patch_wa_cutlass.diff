@@ -1,0 +1,38 @@
+diff --git a/include/cutlass/gemm/device/gemm_universal_adapter.h b/include/cutlass/gemm/device/gemm_universal_adapter.h
+index b835987b..800e7d9f 100644
+--- a/include/cutlass/gemm/device/gemm_universal_adapter.h
++++ b/include/cutlass/gemm/device/gemm_universal_adapter.h
+@@ -63,6 +63,12 @@
+ #include "cutlass/util/sycl_event_manager.hpp"
+ #endif
+ 
++namespace {
++template <typename Kernel>
++class KernelClass {
++};
++}
++
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+ namespace cutlass::gemm::device {
+@@ -586,7 +592,19 @@ public:
+         syclcompat::experimental::launch_policy policy{
+           sycl_grid, sycl_block, launch_props, kernel_props
+         };
+-        auto event = syclcompat::experimental::launch<device_kernel<GemmKernel>>(policy, q, params);
++        // auto event = syclcompat::experimental::launch<device_kernel<GemmKernel>>(policy, q, params);
++        // WA: avoid kernel not forwardable issue 
++        sycl::ext::oneapi::experimental::launch_config config(policy.get_range(), policy.get_launch_properties());
++        auto cgf = [&](::sycl::handler& cgh) {
++          auto KernelFunctor =
++              syclcompat::experimental::detail::build_kernel_functor<device_kernel<GemmKernel>>(cgh, policy, params);
++          sycl::ext::oneapi::experimental::detail::
++              LaunchConfigAccess<sycl::nd_range<3>, decltype(policy.get_launch_properties())>
++                  ConfigAccess(config);
++          cgh.parallel_for<KernelClass<GemmKernel> >(ConfigAccess.getRange(), ConfigAccess.getProperties(), KernelFunctor);
++        };
++        auto event = q.submit(cgf);
++
+         EventManager::getInstance().addEvent(event);
+ #endif // !defined(SYCL_EXT_ONEAPI_WORK_GROUP_SCRATCH_MEMORY)
+ #else

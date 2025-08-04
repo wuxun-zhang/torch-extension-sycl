@@ -10,6 +10,10 @@ An example of writing Sycl extension op for PyTorch.
 # setup oneAPI env
 source /opt/intel/oneapi/setvars.sh
 
+# WA to avoid cutlass build issue
+cd third-party/cutlass-sycl
+patch -p1 < ../../patch_wa_cutlass.diff
+
 pip install --no-build-isolation -e .
 ```
 
