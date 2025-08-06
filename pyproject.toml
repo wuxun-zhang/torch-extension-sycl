@@ -1,6 +1,29 @@
 [build-system]
 requires = [
     "setuptools",
-    "torch",
+    "torch>=2.8.0",
+    "wheel",
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "extension_sycl"
+version = "0.0.1"
+description = "Sycl extension for PyTorch"
+readme = "README.md"
+requires-python = ">=3.9"
+
+[project.urls]
+"Homepage" = "https://github.com/wuxun-zhang/torch-extension-sycl/tree/main"
+
+[tool.setuptools]
+packages = ["extension_sycl"]
+
+[tool.wheel]
+exclude = [
+  "tests*",
+]
+
+wheel.py-api = "cp39"
+wheel.license-files = []
+wheel.packages = ["extension_sycl"]

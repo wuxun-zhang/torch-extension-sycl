@@ -72,13 +72,5 @@ at::Tensor cutlass_gemm(const at::Tensor& A,  // A matrix (m x k)
   return C;
 }
 
-TORCH_LIBRARY(extension_sycl, m) {
-    m.def("cutlass_gemm(Tensor A, Tensor B, Tensor? C) -> Tensor");
-}
-
-TORCH_LIBRARY_IMPL(extension_sycl, XPU, m) {
-    m.impl("cutlass_gemm", &extension_sycl::cutlass_gemm);
-}
-
 } // namespace extension_sycl
 

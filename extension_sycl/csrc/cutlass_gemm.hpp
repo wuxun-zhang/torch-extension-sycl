@@ -39,7 +39,7 @@ void cutlass_gemm_wrapper(int M, int N, int K, DataType const* ptrA, DataType co
   using ElementOutput = OutputType;           // <- data type of elements in output matrix D
 
   using LayoutA = cutlass::layout::RowMajor;
-  using LayoutB = cutlass::layout::ColumnMajor;
+  using LayoutB = cutlass::layout::RowMajor;
   using LayoutC = cutlass::layout::RowMajor;
   using LayoutD = cutlass::layout::RowMajor;
 

@@ -75,13 +75,4 @@ at::Tensor add_fp16(const at::Tensor &a, const at::Tensor &b) {
     return c;
 }
 
-
-TORCH_LIBRARY(extension_sycl, m) {
-    m.def("add_fp16(Tensor a, Tensor b) -> Tensor");
-}
-
-TORCH_LIBRARY_IMPL(extension_sycl, XPU, m) {
-    m.impl("add_fp16", &extension_sycl::add_fp16);
-}
-
 } // namespace extension_sycl
