@@ -28,4 +28,12 @@ import extension_sycl
 ```shell
 cd tests
 python tests/test_gemm.py
+
+# for good performance, set below environment variables:
+# export ONEAPI_DEVICE_SELECTOR=level_zero:gpu
+# export IGC_VISAOptions="-perfmodel"
+# export IGC_ExtraOCLOptions="-cl-intel-256-GRF-per-thread"
+# export SYCL_PROGRAM_COMPILE_OPTIONS="-ze-opt-large-register-file -gline-tables-only"
+# export ONEAPI_DEVICE_SELECTOR=level_zero:gpu
+# export IGC_VectorAliasBBThreshold=100000000000
 ```
