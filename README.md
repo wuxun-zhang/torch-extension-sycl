@@ -14,6 +14,7 @@ pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightly/xp
 # setup oneAPI env, require version 2025.1
 source /opt/intel/oneapi/setvars.sh
 
+# make sure CC and CXX properly set to `icx/icpx` or `clang/clang++`
 pip install --no-build-isolation -e .
 
 ```

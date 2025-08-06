@@ -1,20 +1,23 @@
 cmake_minimum_required(VERSION 3.30)
 
-# set icx/icpx as the compiler
-set(CMAKE_CXX_COMPILER "icpx")
-set(CMAKE_C_COMPILER "icx")
+set(CMAKE_CXX_COMPILER ${CXX})
+set(CMAKE_C_COMPILER ${CC})
 
-set(HOST_COMPILER "g++")
-
-set(CMAKE_CXX_FLAGS " -fsycl -fsycl-targets=spir64_gen -Xs '-device bmg' -fno-sycl-instrument-device-code -Xspirv-translator -spirv-ext=+SPV_INTEL_split_barrier ")
+include(CheckCXXCompilerFlag)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
- 
+
 project(extension_sycl LANGUAGES CXX)
 
-enable_testing()
+if (CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 2025.2)
+    set(DPCPP_FLAGS " -Xspirv-translator -spirv-ext=+SPV_INTEL_split_barrier")
+else()
+    set(DPCPP_FLAGS "-Xspirv-translator -spirv-ext=+SPV_INTEL_split_barrier,+SPV_INTEL_2d_block_io,+SPV_INTEL_subgroup_matrix_multiply_accumulate")
+endif()
+
+set(CMAKE_CXX_FLAGS " -fsycl -fsycl-targets=spir64_gen -Xs '-device pvc,bmg' -fno-sycl-instrument-device-code ${DPCPP_FLAGS}")
 
 find_package(Python COMPONENTS Development Interpreter Development.SABIModule REQUIRED)
 
